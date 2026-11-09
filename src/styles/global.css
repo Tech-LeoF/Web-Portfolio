@@ -1,0 +1,229 @@
+@import "tailwindcss";
+@source "../";
+
+@theme inline {
+    --color-bg: var(--bg);
+    --color-fg: var(--fg);
+    --color-muted: var(--muted);
+    --color-line: var(--line);
+    --font-sans: "Poppins", sans-serif;
+    --animate-float: float 6s ease-in-out infinite;
+    --animate-float-delay: float 7s ease-in-out 1s infinite;
+    --animate-orbit: orbit 25s linear infinite;
+}
+
+@keyframes float {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-18px);
+    }
+}
+
+@keyframes orbit {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ---------- THEME COLORS (registered so they can animate) ---------- */
+@property --bg    { syntax: "<color>"; inherits: true; initial-value: #050d16; }
+@property --fg    { syntax: "<color>"; inherits: true; initial-value: #f2f3f5; }
+@property --muted { syntax: "<color>"; inherits: true; initial-value: #9aa1ab; }
+@property --line  { syntax: "<color>"; inherits: true; initial-value: rgba(255, 255, 255, 0.18); }
+@property --grid  { syntax: "<color>"; inherits: true; initial-value: rgba(255, 255, 255, 0.035); }
+@property --m1    { syntax: "<color>"; inherits: true; initial-value: #06191e; }
+@property --m2    { syntax: "<color>"; inherits: true; initial-value: #14132b; }
+@property --m3    { syntax: "<color>"; inherits: true; initial-value: #1b2110; }
+
+/* ---------- DARK THEME (default) ---------- */
+:root,
+[data-theme="dark"] {
+    --bg: #050d16;
+    --fg: #f2f3f5;
+    --muted: #9aa1ab;
+    --line: rgba(255, 255, 255, 0.18);
+    --grid: rgba(255, 255, 255, 0.035);
+    --m1: #06191e;
+    --m2: #14132b;
+    --m3: #1b2110;
+}
+
+/* ---------- LIGHT THEME ---------- */
+[data-theme="light"] {
+    --bg: #f3f5f6;
+    --fg: #0b0c10;
+    --muted: #5d626b;
+    --line: rgba(0, 0, 0, 0.18);
+    --grid: rgba(0, 0, 0, 0.04);
+    --m1: #f5faf4;
+    --m2: #fff5f8;
+    --m3: #faf3ee;
+}
+
+:root {
+    --mesh:
+        radial-gradient(60% 55% at 0% 0%, var(--m1) 0%, transparent 70%),
+        radial-gradient(50% 50% at 100% 10%, var(--m2) 0%, transparent 70%),
+        radial-gradient(60% 50% at 100% 100%, var(--m3) 0%, transparent 70%);
+}
+
+/* Smooth fade between themes: change 0.8s to make it faster or slower */
+html {
+    scroll-behavior: smooth;
+    transition:
+        --bg 0.8s ease,
+        --fg 0.8s ease,
+        --muted 0.8s ease,
+        --line 0.8s ease,
+        --grid 0.8s ease,
+        --m1 0.8s ease,
+        --m2 0.8s ease,
+        --m3 0.8s ease;
+}
+
+html,
+body {
+    overflow-x: clip; /* no sideways scroll on mobile */
+}
+
+body {
+    background:
+        linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 90px 90px,
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 90px 90px,
+        var(--mesh),
+        var(--bg);
+    background-attachment: fixed;
+    color: var(--fg);
+}
+
+/* ---------- LIVING BACKGROUND ---------- */
+#bg-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* The grid lights up around the cursor */
+#bg-grid {
+    --mx: -999px;
+    --my: -999px;
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+        linear-gradient(color-mix(in srgb, var(--fg) 22%, transparent) 1px, transparent 1px),
+        linear-gradient(90deg, color-mix(in srgb, var(--fg) 22%, transparent) 1px, transparent 1px);
+    background-size: 90px 90px;
+    -webkit-mask-image: radial-gradient(circle 240px at var(--mx) var(--my), #000 0%, transparent 100%);
+    mask-image: radial-gradient(circle 240px at var(--mx) var(--my), #000 0%, transparent 100%);
+}
+
+/* Soft dark edges keep the text readable */
+#bg-vignette {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: radial-gradient(
+        ellipse at 50% 40%,
+        transparent 45%,
+        color-mix(in srgb, var(--bg) 75%, transparent) 100%
+    );
+}
+
+/* ---------- CURSOR ---------- */
+.cursor-ring,
+.cursor-dot {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    will-change: transform;
+}
+
+.cursor-ring.is-visible,
+.cursor-dot.is-visible {
+    opacity: 1;
+}
+
+/* The inner span handles size/state, the outer element handles position */
+.cursor-ring span,
+.cursor-dot span {
+    display: block;
+    border-radius: 9999px;
+    transition:
+        transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.5s ease,
+        background-color 0.5s ease;
+}
+
+.cursor-ring span {
+    width: 56px;
+    height: 56px;
+    border: 1px solid color-mix(in srgb, var(--fg) 60%, transparent);
+    transform: scale(var(--ring-scale, 1));
+}
+
+.cursor-dot span {
+    width: 6px;
+    height: 6px;
+    background: var(--fg);
+}
+
+/* Hovering a link: ring shrinks away slowly, dot grows and turns gray.
+   Change the 1s values to control how long the ring takes to disappear. */
+.cursor-ring.is-link span {
+    transform: scale(0.3);
+    opacity: 0;
+    transition:
+        transform 1s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 1s ease;
+}
+
+.cursor-dot.is-link span {
+    transform: scale(2.2);
+    background: var(--muted);
+}
+
+/* Hovering the theme button: ring wraps it, dot disappears */
+.cursor-ring.is-magnetic span {
+    background: color-mix(in srgb, var(--fg) 8%, transparent);
+}
+
+.cursor-dot.is-hidden span {
+    transform: scale(0);
+}
+
+/* ---------- SCROLL REVEAL ---------- */
+.js .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+        opacity 0.8s ease,
+        transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.js .reveal.is-in {
+    opacity: 1;
+    transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .js .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+}

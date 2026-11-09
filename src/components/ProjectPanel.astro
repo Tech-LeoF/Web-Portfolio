@@ -1,0 +1,241 @@
+---
+interface Props {
+    project: {
+        slug: string;
+        title: string;
+        year: string;
+        program?: string;
+        description: string;
+        about?: string[];
+        tags: string[];
+        role: string;
+        contributions: string[];
+        evidence: { label: string; href: string }[];
+        images?: string[];
+        cover?: string;
+        open: { label: string; href: string };
+    };
+}
+
+const { project } = Astro.props;
+const eyebrow = [project.program?.toUpperCase(), project.year]
+    .filter(Boolean)
+    .join(" · ");
+const about = project.about?.length ? project.about : [project.description];
+---
+
+<div
+    id={project.slug}
+    data-panel
+    class="panel"
+    role="dialog"
+    aria-modal="true"
+    aria-hidden="true"
+    aria-labelledby={`${project.slug}-title`}
+>
+    <div class="scrim" data-close></div>
+
+    <aside class="sheet">
+        <!-- Top bar -->
+        <div
+            class="flex items-center justify-between border-b border-line px-6 py-5 md:px-8"
+        >
+            <button
+                type="button"
+                data-close
+                aria-label="Back to projects"
+                class="grid h-9 w-9 place-items-center rounded-full border border-fg/60 transition hover:bg-fg/10"
+            >
+                <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                >
+                    <path d="M15 5l-7 7 7 7"></path>
+                </svg>
+            </button>
+            <button
+                type="button"
+                data-close
+                class="text-sm font-semibold text-muted transition hover:text-fg"
+            >
+                Back To Projects.
+            </button>
+        </div>
+
+        <!-- Scrollable content -->
+        <div data-scroll class="scroll flex-1 overflow-y-auto px-6 py-8 md:px-8">
+            <p class="text-xs tracking-[0.25em] text-muted">{eyebrow}</p>
+            <h2 id={`${project.slug}-title`} class="mt-3 text-3xl font-bold">
+                {project.title}
+            </h2>
+            <p class="mt-3 leading-8 text-muted">{project.description}</p>
+
+            {
+                project.cover ? (
+                    <img
+                        src={project.cover}
+                        alt={`${project.title} preview`}
+                        class="mt-8 w-full rounded-xl border border-line"
+                    />
+                ) : (
+                    <div class="mt-8 grid aspect-[16/10] w-full place-items-center rounded-xl border border-line bg-fg/5 text-xs tracking-[0.25em] text-muted">
+                        ADD COVER IMAGE
+                    </div>
+                )
+            }
+
+            <h3 class="mt-10 text-lg font-semibold">About</h3>
+            <div class="mt-3 space-y-4 leading-8 text-muted">
+                {about.map((p) => <p>{p}</p>)}
+            </div>
+
+            <h3 class="mt-10 text-lg font-semibold">My Role & Contributions</h3>
+            <p class="mt-3 font-semibold">{project.role}</p>
+            <ul class="mt-3 space-y-2 leading-7 text-muted">
+                {
+                    project.contributions.map((c) => (
+                        <li class="flex gap-3">
+                            <span aria-hidden="true">—</span>
+                            <span>{c}</span>
+                        </li>
+                    ))
+                }
+            </ul>
+
+            <h3 class="mt-10 text-lg font-semibold">Technologies</h3>
+            <ul class="mt-4 flex flex-wrap gap-2">
+                {
+                    project.tags.map((t) => (
+                        <li class="rounded-md bg-fg/10 px-3 py-1.5 text-xs font-semibold">
+                            {t}
+                        </li>
+                    ))
+                }
+            </ul>
+
+            <h3 class="mt-10 text-lg font-semibold">Links & Evidence</h3>
+            <ul class="mt-4 space-y-3">
+                {
+                    project.evidence.map((e) => (
+                        <li>
+                            <a
+                                href={e.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="group flex items-center justify-between rounded-xl border border-line px-4 py-3 text-sm transition hover:border-fg"
+                            >
+                                <span>{e.label}</span>
+                                <span
+                                    aria-hidden="true"
+                                    class="transition group-hover:translate-x-0.5"
+                                    >↗</span
+                                >
+                            </a>
+                        </li>
+                    ))
+                }
+            </ul>
+
+            {
+                project.images && project.images.length > 0 && (
+                    <>
+                        <h3 class="mt-10 text-lg font-semibold">
+                            Screenshots & Wireframes
+                        </h3>
+                        <div class="mt-4 grid gap-3 sm:grid-cols-2">
+                            {project.images.map((src) => (
+                                <a
+                                    href={src}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <img
+                                        src={src}
+                                        alt={`${project.title} screenshot`}
+                                        loading="lazy"
+                                        class="aspect-video w-full rounded-lg border border-line object-cover"
+                                    />
+                                </a>
+                            ))}
+                        </div>
+                    </>
+                )
+            }
+        </div>
+
+        <!-- Fixed bottom bar -->
+        <a
+            href={project.open.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center justify-center gap-2 bg-fg py-5 text-sm font-semibold text-bg transition hover:opacity-90"
+        >
+            {project.open.label}
+            <span aria-hidden="true">↗</span>
+        </a>
+    </aside>
+</div>
+
+<style>
+    .panel {
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        visibility: hidden;
+        pointer-events: none;
+        /* keep it visible while the closing animation plays */
+        transition: visibility 0s linear 0.5s;
+    }
+    .panel.is-open {
+        visibility: visible;
+        pointer-events: auto;
+        transition-delay: 0s;
+    }
+
+    .scrim {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        opacity: 0;
+        transition: opacity 0.4s ease;
+    }
+    .panel.is-open .scrim {
+        opacity: 1;
+    }
+
+    .sheet {
+        position: absolute;
+        top: 0;
+        right: 0;
+        display: flex;
+        flex-direction: column;
+        width: min(100%, 640px);
+        height: 100%;
+        background: var(--bg);
+        border-left: 1px solid var(--line);
+        transform: translateX(100%);
+        transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .panel.is-open .sheet {
+        transform: none;
+    }
+
+    .scroll {
+        overscroll-behavior: contain;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .panel,
+        .scrim,
+        .sheet {
+            transition: none;
+        }
+    }
+</style>

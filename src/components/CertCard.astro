@@ -1,0 +1,43 @@
+---
+interface Props {
+    cert: {
+        title: string;
+        issuer: string;
+        date: string;
+        href: string;
+        image?: string;
+    };
+}
+const { cert } = Astro.props;
+---
+
+<article class="reveal flex flex-col overflow-hidden rounded-2xl border border-line bg-fg/5">
+    <a href={cert.href} target="_blank" rel="noopener noreferrer" class="block">
+        {
+            cert.image ? (
+                <img
+                    src={cert.image}
+                    alt={`${cert.title} certificate`}
+                    loading="lazy"
+                    class="aspect-[4/3] w-full object-cover"
+                />
+            ) : (
+                <div class="grid aspect-[4/3] w-full place-items-center border-b border-line text-xs tracking-[0.25em] text-muted">
+                    ADD DIPLOMA IMAGE
+                </div>
+            )
+        }
+    </a>
+    <div class="p-6">
+        <p class="text-xs text-muted">{cert.issuer} · {cert.date}</p>
+        <h3 class="mt-2 text-lg font-semibold">{cert.title}</h3>
+        <a
+            href={cert.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="mt-5 inline-block text-sm underline decoration-line underline-offset-4 hover:decoration-fg"
+        >
+            View certificate ↗
+        </a>
+    </div>
+</article>

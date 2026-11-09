@@ -1,0 +1,40 @@
+---
+const nav = [
+    { href: "/about", label: "About" },
+    { href: "/stack", label: "Tech Stack" },
+    { href: "/projects", label: "Projects" },
+    { href: "/certificates", label: "Certificates" },
+    { href: "/reflection", label: "Reflection" },
+    { href: "/contact", label: "Contact" },
+];
+
+const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+const i = nav.findIndex((l) => l.href === path);
+const prev = i > 0 ? nav[i - 1] : undefined;
+const next = i >= 0 ? nav[i + 1] : undefined;
+---
+
+{
+    (prev || next) && (
+        <nav
+            aria-label="Page navigation"
+            class="mt-24 flex items-center justify-between gap-6 border-t border-line pt-8 text-sm"
+        >
+            {prev ? (
+                <a href={prev.href} class="text-muted transition hover:text-fg">
+                    ← {prev.label}
+                </a>
+            ) : (
+                <span />
+            )}
+            {next && (
+                <a
+                    href={next.href}
+                    class="border-b border-fg pb-1 font-semibold transition hover:-translate-y-0.5"
+                >
+                    Next: {next.label} →
+                </a>
+            )}
+        </nav>
+    )
+}

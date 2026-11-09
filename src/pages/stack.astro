@@ -1,0 +1,200 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import NextLink from "../components/NextLink.astro";
+import * as si from "simple-icons";
+
+type Tool = { name: string; icon?: string; fallback?: string };
+
+// Looked up by name, so a missing logo never breaks the build (it shows letters instead)
+const icons = si as unknown as Record<
+    string,
+    { path: string; hex: string } | undefined
+>;
+
+/* EDIT: your languages and tools.
+   icon = name of the logo in simple-icons; fallback = letters shown if there is no logo */
+const groups: { group: string; items: Tool[] }[] = [
+    {
+        group: "Frontend",
+        items: [
+            { name: "HTML5", icon: "siHtml5" },
+            { name: "JavaScript", icon: "siJavascript" },
+            { name: "TypeScript", icon: "siTypescript" },
+            { name: "React", icon: "siReact" },
+            { name: "Next.js", icon: "siNextdotjs" },
+            { name: "Astro", icon: "siAstro" },
+            { name: "Tailwind CSS", icon: "siTailwindcss" },
+            { name: "Three.js", icon: "siThreedotjs" },
+        ],
+    },
+    {
+        group: "Backend",
+        items: [
+            { name: "Node.js", icon: "siNodedotjs" },
+            { name: "Python", icon: "siPython" },
+            { name: "Prisma", icon: "siPrisma" },
+            { name: "REST APIs", fallback: "API" },
+        ],
+    },
+    {
+        group: "Databases",
+        items: [
+            { name: "PostgreSQL", icon: "siPostgresql" },
+            { name: "MySQL", icon: "siMysql" },
+            { name: "Supabase", icon: "siSupabase" },
+        ],
+    },
+    {
+        group: "Data & Office",
+        items: [
+            { name: "Excel (Advanced)", icon: "siMicrosoftexcel", fallback: "XLS" },
+            { name: "Power BI", icon: "siPowerbi", fallback: "BI" },
+            { name: "Office 365", icon: "siMicrosoftoffice", fallback: "365" },
+        ],
+    },
+    {
+        group: "AI & Computer Vision",
+        items: [
+            { name: "OCR Scanning", fallback: "OCR" },
+            { name: "AI", fallback: "AI" },
+        ],
+    },
+    {
+        group: "Tools & Methods",
+        items: [
+            { name: "Git", icon: "siGit" },
+            { name: "GitHub", icon: "siGithub" },
+            { name: "Figma", icon: "siFigma" },
+            { name: "Canva", icon: "siCanva", fallback: "Ca" },
+            { name: "Jira", icon: "siJira", fallback: "Ji" },
+            { name: "VS Code", icon: "siVisualstudiocode", fallback: "VS" },
+            { name: "Scrum", fallback: "SCRUM" },
+        ],
+    },
+];
+
+// Very dark / very light brand colors would disappear on one of the themes
+function tone(hex: string) {
+    const n = parseInt(hex, 16);
+    const l = (0.299 * ((n >> 16) & 255) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) / 255;
+    return l < 0.3 ? "dark" : l > 0.85 ? "light" : "mid";
+}
+---
+
+<Layout title="Tech Stack | Leonardo López">
+    <Header />
+    <main class="mx-auto max-w-6xl px-6 pb-24 pt-32 md:pt-40">
+        <h1 class="reveal text-5xl font-bold md:text-6xl">Tech Stack.</h1>
+        <p class="reveal mt-6 max-w-2xl leading-8 text-muted">
+            The languages, frameworks and tools I use to design, build and ship
+            projects. Hover a logo to see its brand color.
+        </p>
+
+        <div class="mt-14 grid gap-6 md:grid-cols-2">
+            {
+                groups.map((g) => (
+                    <section class="reveal rounded-2xl border border-line bg-fg/5 p-6 md:p-8">
+                        <h2 class="text-xs tracking-[0.3em] text-muted">
+                            {g.group.toUpperCase()}
+                        </h2>
+                        <ul class="mt-6 grid grid-cols-3 gap-3 sm:grid-cols-4">
+                            {g.items.map((t) => {
+                                const ic = t.icon ? icons[t.icon] : undefined;
+                                return (
+                                    <li
+                                        class="tool"
+                                        style={ic ? `--brand:#${ic.hex}` : undefined}
+                                        data-tone={ic ? tone(ic.hex) : undefined}
+                                    >
+                                        {ic ? (
+                                            <svg
+                                                viewBox="0 0 24 24"
+                                                role="img"
+                                                aria-label={t.name}
+                                            >
+                                                <path d={ic.path} fill="currentColor" />
+                                            </svg>
+                                        ) : (
+                                            <span class="glyph" aria-hidden="true">
+                                                {t.fallback ?? t.name.slice(0, 2)}
+                                            </span>
+                                        )}
+                                        <span class="name">{t.name}</span>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </section>
+                ))
+            }
+        </div>
+
+        <NextLink />
+    </main>
+    <Footer />
+</Layout>
+
+<style>
+    .tool {
+        --c: var(--muted);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1.25rem 0.5rem 1rem;
+        border: 1px solid var(--line);
+        border-radius: 1rem;
+        background: color-mix(in srgb, var(--fg) 4%, transparent);
+        text-align: center;
+        transition:
+            transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+            border-color 0.35s ease,
+            box-shadow 0.35s ease;
+    }
+    .tool:hover {
+        --c: var(--brand, var(--fg));
+        transform: translateY(-6px);
+        border-color: var(--c);
+        box-shadow: 0 16px 40px -20px color-mix(in srgb, var(--c) 80%, transparent);
+    }
+    /* Keep dark brands readable on the dark theme and light brands on the light theme */
+    :global([data-theme="dark"]) .tool[data-tone="dark"]:hover,
+    :global([data-theme="light"]) .tool[data-tone="light"]:hover {
+        --c: var(--fg);
+    }
+
+    .tool svg {
+        width: 34px;
+        height: 34px;
+        color: var(--c);
+        transition: color 0.35s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .tool:hover svg,
+    .tool:hover .glyph {
+        transform: scale(1.18);
+    }
+
+    .glyph {
+        display: grid;
+        place-items: center;
+        min-width: 34px;
+        height: 34px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        color: var(--c);
+        transition: color 0.35s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .name {
+        font-size: 0.72rem;
+        line-height: 1.3;
+        color: var(--muted);
+        transition: color 0.35s ease;
+    }
+    .tool:hover .name {
+        color: var(--fg);
+    }
+</style>

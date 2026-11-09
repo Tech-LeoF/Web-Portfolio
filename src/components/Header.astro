@@ -1,0 +1,140 @@
+---
+const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+
+const links = [
+    { href: "/about", label: "About" },
+    { href: "/stack", label: "Tech Stack" },
+    { href: "/projects", label: "Projects" },
+    { href: "/certificates", label: "Certificates" },
+    { href: "/reflection", label: "Reflection" },
+    { href: "/contact", label: "Contact" },
+];
+---
+
+<header class="absolute inset-x-0 top-0 z-30">
+    <nav
+        class="mx-auto flex max-w-6xl items-center justify-between px-6 py-6 md:py-8"
+    >
+        <a href="/" class="text-2xl font-bold">LL<span class="text-muted">.</span></a>
+
+        <div class="flex items-center gap-4 md:gap-6">
+            <!-- Desktop menu -->
+            <ul class="hidden gap-2 text-sm text-muted lg:flex">
+                {
+                    links.map((link) => (
+                        <li>
+                            <a
+                                href={link.href}
+                                class="nav-link"
+                                aria-current={path === link.href ? "page" : undefined}
+                            >
+                                {link.label}
+                            </a>
+                        </li>
+                    ))
+                }
+            </ul>
+
+            <!-- Theme toggle -->
+            <button
+                id="theme-toggle"
+                data-magnetic
+                aria-label="Toggle theme"
+                class="grid h-8 w-8 place-items-center text-fg"
+            >
+                <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"></circle>
+                    <path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"></path>
+                </svg>
+            </button>
+
+            <!-- Mobile menu button -->
+            <button
+                id="menu-toggle"
+                aria-label="Open menu"
+                aria-expanded="false"
+                aria-controls="mobile-menu"
+                class="grid h-8 w-8 place-items-center text-fg lg:hidden"
+            >
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                    <path d="M4 7h16M4 12h16M4 17h16"></path>
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile menu -->
+    <div
+        id="mobile-menu"
+        class="mx-6 hidden rounded-2xl border border-line bg-bg/90 p-3 backdrop-blur lg:hidden"
+    >
+        <ul class="flex flex-col text-sm">
+            {
+                links.map((link) => (
+                    <li>
+                        <a
+                            href={link.href}
+                            class="block rounded-xl px-4 py-3 text-muted transition hover:text-fg aria-[current=page]:text-fg"
+                            aria-current={path === link.href ? "page" : undefined}
+                        >
+                            {link.label}
+                        </a>
+                    </li>
+                ))
+            }
+        </ul>
+    </div>
+</header>
+
+<style>
+    .nav-link {
+        position: relative;
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        transition: color 0.3s;
+    }
+    .nav-link:hover,
+    .nav-link[aria-current="page"] {
+        color: var(--fg);
+    }
+
+    /* Underline that grows below the link, wider than the text */
+    .nav-link::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -0.5rem;
+        height: 1px;
+        background: var(--fg);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.35s ease;
+    }
+    .nav-link:hover::after,
+    .nav-link[aria-current="page"]::after {
+        transform: scaleX(1);
+    }
+</style>
+
+<script>
+    const root = document.documentElement;
+
+    // Theme toggle (the fade itself is handled in global.css)
+    document.getElementById("theme-toggle")?.addEventListener("click", () => {
+        const next = root.dataset.theme === "light" ? "dark" : "light";
+        root.dataset.theme = next;
+        try {
+            localStorage.setItem("theme", next);
+        } catch {}
+    });
+
+    // Mobile menu
+    const menuBtn = document.getElementById("menu-toggle");
+    const menu = document.getElementById("mobile-menu");
+
+    menuBtn?.addEventListener("click", () => {
+        const open = menu?.classList.toggle("hidden") === false;
+        menuBtn.setAttribute("aria-expanded", String(open));
+    });
+</script>

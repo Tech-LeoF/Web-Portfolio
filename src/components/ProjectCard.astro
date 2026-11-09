@@ -1,0 +1,168 @@
+---
+interface Props {
+    project: {
+        slug: string;
+        title: string;
+        year: string;
+        program?: string;
+        description: string;
+        tags: string[];
+        cover?: string;
+    };
+    index?: number;
+}
+
+const { project, index = 0 } = Astro.props;
+const eyebrow = [project.program?.toUpperCase(), project.year]
+    .filter(Boolean)
+    .join(" · ");
+const tall = index % 2 === 1;
+---
+
+<a
+    href={`#${project.slug}`}
+    data-open={project.slug}
+    aria-haspopup="dialog"
+    class="tile reveal"
+>
+    {
+        project.cover ? (
+            <img
+                src={project.cover}
+                alt={`${project.title} preview`}
+                loading="lazy"
+            />
+        ) : (
+            <div class:list={["placeholder", { tall }]}>
+                <span>ADD COVER IMAGE</span>
+            </div>
+        )
+    }
+
+    <div class="overlay">
+        <p class="eyebrow">{eyebrow}</p>
+        <h3>{project.title}</h3>
+        <p class="desc">{project.description}</p>
+        <ul>
+            {project.tags.map((t) => <li>{t}</li>)}
+        </ul>
+    </div>
+</a>
+
+<style>
+    .tile {
+        position: relative;
+        display: block;
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+        break-inside: avoid;
+        border-radius: 1rem;
+        border: 1px solid var(--line);
+    }
+
+    .tile img {
+        display: block;
+        width: 100%;
+        height: auto;
+        transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .tile:hover img {
+        transform: scale(1.04);
+    }
+
+    .placeholder {
+        display: grid;
+        place-items: center;
+        aspect-ratio: 4 / 3;
+        background: linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--fg) 10%, transparent),
+            color-mix(in srgb, var(--fg) 3%, transparent)
+        );
+        font-size: 0.7rem;
+        letter-spacing: 0.25em;
+        color: var(--muted);
+    }
+    .placeholder.tall {
+        aspect-ratio: 4 / 5;
+    }
+
+    /* Dark overlay with the info, shown on hover or keyboard focus */
+    .overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 1.5rem;
+        color: #f2f3f5;
+        background: linear-gradient(
+            to top,
+            rgba(3, 8, 14, 0.92),
+            rgba(3, 8, 14, 0.6) 55%,
+            rgba(3, 8, 14, 0.3)
+        );
+        opacity: 0;
+        transition: opacity 0.4s ease;
+    }
+    .tile:hover .overlay,
+    .tile:focus-visible .overlay {
+        opacity: 1;
+    }
+
+    /* Touch screens have no hover, so the info is always visible */
+    @media (hover: none) {
+        .overlay {
+            opacity: 1;
+        }
+    }
+
+    .overlay > * {
+        transform: translateY(8px);
+        transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .tile:hover .overlay > *,
+    .tile:focus-visible .overlay > * {
+        transform: none;
+    }
+    @media (hover: none) {
+        .overlay > * {
+            transform: none;
+        }
+    }
+
+    .eyebrow {
+        margin: 0 0 0.5rem;
+        font-size: 0.65rem;
+        letter-spacing: 0.25em;
+        color: rgba(255, 255, 255, 0.7);
+    }
+    h3 {
+        margin: 0;
+        font-size: 1.75rem;
+        font-weight: 700;
+        line-height: 1.1;
+    }
+    .desc {
+        margin: 0.5rem 0 1rem;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        color: rgba(255, 255, 255, 0.85);
+    }
+    ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    li {
+        border-radius: 9999px;
+        padding: 0.25rem 0.85rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        background: rgba(255, 255, 255, 0.18);
+        backdrop-filter: blur(4px);
+    }
+</style>

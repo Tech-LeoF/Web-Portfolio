@@ -1,0 +1,13 @@
+---
+import Socials from "./Socials.astro";
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-line">
+    <div
+        class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-6 py-10 text-sm text-muted md:flex-row"
+    >
+        <p>© {year} Leonardo López. All rights reserved.</p>
+        <Socials />
+    </div>
+</footer>

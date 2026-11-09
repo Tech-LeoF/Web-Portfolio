@@ -1,0 +1,65 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import NextLink from "../components/NextLink.astro";
+
+// EDIT: your About Me
+const paragraphs = [
+    "Hi! I'm Leonardo, a software development student with three years of hands-on training in the ¡Supérate! program. I enjoy turning ideas into real products, from the first sketch to the deployed app.",
+    "Over these three years I learned to work in teams, to meet deadlines and to present my work with confidence. I'm looking for opportunities where I can keep growing as a fullstack developer.",
+];
+
+const education = [
+    { year: "Year 1 · 2024", title: "Programming Fundamentals", text: "Logic, HTML, CSS and JavaScript. Built my first team project." },
+    { year: "Year 2 · 2025", title: "Web Development", text: "Frameworks, databases and version control. Worked with design and backend teammates." },
+    { year: "Year 3 · 2026", title: "Fullstack Projects", text: "Led a project end to end, from planning to the final pitch." },
+];
+
+const strengths = [
+    { title: "Problem solving", text: "I break big problems into small, testable steps and enjoy debugging until it clicks." },
+    { title: "Teamwork", text: "I communicate clearly, share progress often and help my teammates when they get stuck." },
+    { title: "Fast learner", text: "I pick up new tools quickly and apply them in real projects." },
+    { title: "Attention to detail", text: "I care about clean code, accessible interfaces and polished interactions." },
+];
+---
+
+<Layout title="About | Leonardo López">
+    <Header />
+    <main class="mx-auto max-w-6xl px-6 pb-24 pt-32 md:pt-40">
+        <h1 class="reveal text-5xl font-bold md:text-6xl">About Me.</h1>
+
+        <div class="reveal mt-12 max-w-3xl space-y-6 text-lg leading-9 text-muted">
+            {paragraphs.map((p) => <p>{p}</p>)}
+        </div>
+
+        <h2 class="reveal mt-24 text-xs tracking-[0.3em] text-muted">EDUCATION</h2>
+        <div class="mt-10 max-w-3xl space-y-12 border-l border-line pl-8">
+            {
+                education.map((e) => (
+                    <section class="reveal relative">
+                        <span class="absolute -left-[37px] top-2 h-2.5 w-2.5 rounded-full border border-fg bg-bg" />
+                        <p class="text-xs tracking-[0.25em] text-muted">{e.year.toUpperCase()}</p>
+                        <h3 class="mt-2 text-lg font-semibold">{e.title}</h3>
+                        <p class="mt-2 leading-8 text-muted">{e.text}</p>
+                    </section>
+                ))
+            }
+        </div>
+
+        <h2 class="reveal mt-24 text-xs tracking-[0.3em] text-muted">STRENGTHS</h2>
+        <div class="mt-10 grid gap-6 sm:grid-cols-2">
+            {
+                strengths.map((s) => (
+                    <div class="reveal rounded-2xl border border-line bg-fg/5 p-6 transition duration-300 hover:-translate-y-1 hover:border-fg">
+                        <h3 class="font-semibold">{s.title}</h3>
+                        <p class="mt-2 leading-7 text-muted">{s.text}</p>
+                    </div>
+                ))
+            }
+        </div>
+
+        <NextLink />
+    </main>
+    <Footer />
+</Layout>

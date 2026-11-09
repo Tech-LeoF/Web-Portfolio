@@ -1,0 +1,52 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import NextLink from "../components/NextLink.astro";
+import CertCard from "../components/CertCard.astro";
+
+/* EDIT: the 3 required courses of the module.
+   image: put the diploma in public/certs/ and use "/certs/file.jpg" */
+const courses = [
+    { title: "Course 1 Name", issuer: "Platzi", date: "2024", href: "https://platzi.com/p/your-user/course/your-course/diploma/detalle/", image: "" },
+    { title: "Course 2 Name", issuer: "Platzi", date: "2025", href: "https://platzi.com/p/your-user/course/your-course/diploma/detalle/", image: "" },
+    { title: "Course 3 Name", issuer: "Platzi", date: "2026", href: "https://platzi.com/p/your-user/course/your-course/diploma/detalle/", image: "" },
+];
+
+// EDIT: extra certificates earned during the 3 years
+const extra = [
+    { title: "Responsive Web Design", issuer: "freeCodeCamp", date: "2025", href: "https://www.freecodecamp.org/certification/your-user/responsive-web-design", image: "" },
+    { title: "Git & GitHub Essentials", issuer: "Coursera", date: "2026", href: "https://www.coursera.org/account/accomplishments/verify/your-code", image: "" },
+];
+---
+
+<Layout title="Certificates | Leonardo López">
+    <Header />
+    <main class="mx-auto max-w-6xl px-6 pb-24 pt-32 md:pt-40">
+        <h1 class="reveal text-5xl font-bold md:text-6xl">Certificates.</h1>
+        <p class="reveal mt-6 max-w-2xl leading-8 text-muted">
+            Courses and diplomas earned during my three years of training.
+        </p>
+
+        <h2 class="reveal mt-16 text-xs tracking-[0.3em] text-muted">MODULE COURSES</h2>
+        <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {courses.map((c) => <CertCard cert={c} />)}
+        </div>
+
+        {
+            extra.length > 0 && (
+                <>
+                    <h2 class="reveal mt-20 text-xs tracking-[0.3em] text-muted">
+                        ADDITIONAL CERTIFICATES
+                    </h2>
+                    <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                        {extra.map((c) => <CertCard cert={c} />)}
+                    </div>
+                </>
+            )
+        }
+
+        <NextLink />
+    </main>
+    <Footer />
+</Layout>

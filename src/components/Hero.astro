@@ -1,0 +1,196 @@
+---
+import Socials from "./Socials.astro";
+---
+
+<section
+    class="relative mx-auto grid min-h-screen max-w-6xl items-center gap-12 px-6 pb-16 pt-28 md:grid-cols-2 md:pt-24"
+>
+    <div class="relative z-10">
+        <p class="mb-4 text-sm tracking-[0.35em] text-muted">HI, I AM</p>
+
+        <h1 class="text-5xl font-bold leading-tight md:text-7xl">
+            Leonardo <br />
+            <span class="text-transparent [-webkit-text-stroke:1.5px_var(--fg)]"
+                >López</span
+            >
+        </h1>
+
+        <p class="mt-3 text-lg text-muted">Fullstack Developer</p>
+
+        <p class="mt-6 max-w-md leading-8 text-muted">
+            I build fast, accessible web applications and care about every
+            detail of the experience.
+            <a
+                href="/contact"
+                class="font-semibold text-fg underline decoration-line underline-offset-4"
+                >Let's talk</a
+            >.
+        </p>
+
+        <div class="mt-10 flex flex-wrap items-center gap-4">
+            <a
+                href="/projects"
+                class="rounded-full bg-fg px-7 py-3 text-sm font-semibold text-bg transition hover:-translate-y-1"
+            >
+                View projects
+            </a>
+            <a
+                href="/CVA_Leonardo_López.pdf"
+                download="CV-Leonardo-Lopez.pdf"
+                class="rounded-full border border-line px-7 py-3 text-sm transition hover:border-fg"
+            >
+                Download CV
+            </a>
+        </div>
+    </div>
+
+    <!-- Floating character with ring -->
+    <div class="stage" id="photo-wrap">
+        <div class="halo"></div>
+        <div class="ring"></div>
+
+        <!-- Tilt (mouse) wraps the floating (animation) -->
+        <div class="tilt" id="tilt">
+            <div class="float">
+                <img
+                    src="/Foto_Formal_Blanco-removebg.png"
+                    alt="Leonardo López"
+                    class="photo"
+                />
+            </div>
+        </div>
+
+        <div class="badge badge-top float-delay">✦ 3 years of training</div>
+        <div class="badge badge-bottom float">● Available for work</div>
+    </div>
+</section>
+
+<style>
+    .stage {
+        position: relative;
+        margin-inline: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 320px;
+        height: 420px;
+        perspective: 900px;
+    }
+    @media (min-width: 768px) {
+        .stage {
+            width: 400px;
+            height: 520px;
+        }
+    }
+
+    .halo {
+        position: absolute;
+        width: 288px;
+        height: 288px;
+        border-radius: 9999px;
+        background: color-mix(in srgb, var(--fg) 10%, transparent);
+        filter: blur(90px);
+    }
+
+    /* Dashed ring that spins slowly */
+    .ring {
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        border-radius: 9999px;
+        border: 1px dashed var(--line);
+        animation: orbit 25s linear infinite;
+    }
+    @media (min-width: 768px) {
+        .ring {
+            width: 380px;
+            height: 380px;
+        }
+    }
+
+    /* Mouse tilt (JS sets the transform here) */
+    .tilt {
+        position: relative;
+        transition: transform 0.2s ease-out;
+        will-change: transform;
+    }
+
+    /* Floating up and down */
+    .float {
+        animation: float 6s ease-in-out infinite;
+        will-change: transform;
+    }
+    .float-delay {
+        animation: float 7s ease-in-out 1s infinite;
+    }
+
+    .photo {
+        display: block;
+        height: 400px;
+        object-fit: contain;
+        -webkit-mask-image: linear-gradient(
+            to bottom,
+            black 65%,
+            transparent 80%
+        );
+        mask-image: linear-gradient(to bottom, black 65%, transparent 80%);
+    }
+    @media (min-width: 768px) {
+        .photo {
+            height: 480px;
+        }
+    }
+
+    .badge {
+        position: absolute;
+        border: 1px solid var(--line);
+        background: color-mix(in srgb, var(--fg) 5%, transparent);
+        border-radius: 1rem;
+        padding: 0.5rem 1rem;
+        font-size: 0.75rem;
+        backdrop-filter: blur(8px);
+        white-space: nowrap;
+    }
+    .badge-top {
+        top: 4rem;
+        left: -0.5rem;
+    }
+    .badge-bottom {
+        bottom: 5rem;
+        right: -0.5rem;
+    }
+    @media (min-width: 768px) {
+        .badge-top {
+            left: -1rem;
+        }
+    }
+
+    @keyframes float {
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-18px);
+        }
+    }
+    @keyframes orbit {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+</style>
+
+<script>
+    const wrap = document.getElementById("photo-wrap");
+    const tilt = document.getElementById("tilt");
+
+    // Subtle tilt effect that follows the mouse
+    wrap?.addEventListener("mousemove", (e) => {
+        const r = wrap.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - 0.5;
+        const y = (e.clientY - r.top) / r.height - 0.5;
+        if (tilt)
+            tilt.style.transform = `rotateY(${x * 12}deg) rotateX(${-y * 12}deg)`;
+    });
+</script>

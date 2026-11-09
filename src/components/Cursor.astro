@@ -1,0 +1,73 @@
+<script>
+    const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
+    const ring = document.getElementById("cursor-ring");
+    const dot = document.getElementById("cursor-dot");
+
+    if (fine && ring && dot) {
+        let mx = -100,
+            my = -100;
+        let dx = mx,
+            dy = my;
+        let rx = mx,
+            ry = my;
+        let target = null as HTMLElement | null;
+
+        addEventListener("mousemove", (e) => {
+            mx = e.clientX;
+            my = e.clientY;
+            ring.classList.add("is-visible");
+            dot.classList.add("is-visible");
+        });
+
+        document.documentElement.addEventListener("mouseleave", () => {
+            ring.classList.remove("is-visible");
+            dot.classList.remove("is-visible");
+        });
+
+        document.addEventListener("mouseover", (e) => {
+            const el = (e.target as HTMLElement).closest<HTMLElement>(
+                "a, button, [data-magnetic]",
+            );
+            if (el === target) return;
+            target = el;
+
+            const magnetic = !!el && el.hasAttribute("data-magnetic");
+            const link = !!el && !magnetic;
+
+            ring.classList.toggle("is-link", link);
+            dot.classList.toggle("is-link", link);
+            dot.classList.toggle("is-hidden", magnetic);
+
+            if (magnetic && el) {
+                const r = el.getBoundingClientRect();
+                const size = Math.max(r.width, r.height) + 22;
+                ring.style.width = size + "px";
+                ring.style.height = size + "px";
+            } else {
+                ring.style.width = "";
+                ring.style.height = "";
+            }
+        });
+
+        (function loop() {
+            let tx = mx,
+                ty = my;
+            const t = target;
+
+            if (t && t.hasAttribute("data-magnetic")) {
+                const r = t.getBoundingClientRect();
+                tx = r.left + r.width / 2;
+                ty = r.top + r.height / 2;
+            }
+
+            dx += (mx - dx) * 0.4;
+            dy += (my - dy) * 0.4;
+            rx += (tx - rx) * 0.15;
+            ry += (ty - ry) * 0.15;
+
+            dot.style.transform = `translate3d(${dx}px, ${dy}px, 0) translate(-50%, -50%)`;
+            ring.style.transform = `translate3d(${rx}px, ${ry}px, 0) translate(-50%, -50%)`;
+            requestAnimationFrame(loop);
+        })();
+    }
+</script>
