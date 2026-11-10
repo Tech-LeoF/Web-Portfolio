@@ -1,14 +1,10 @@
----
-import Socials from "./Socials.astro";
----
-
 <section
-    class="relative mx-auto grid min-h-screen max-w-6xl items-center gap-12 px-6 pb-16 pt-28 md:grid-cols-2 md:pt-24"
+    class="relative mx-auto grid min-h-[100svh] max-w-6xl items-center gap-10 px-6 pb-16 pt-28 md:grid-cols-2 md:gap-12 md:pt-24"
 >
     <div class="relative z-10">
         <p class="mb-4 text-sm tracking-[0.35em] text-muted">HI, I AM</p>
 
-        <h1 class="text-5xl font-bold leading-tight md:text-7xl">
+        <h1 class="text-5xl font-bold leading-tight sm:text-6xl lg:text-7xl">
             Leonardo <br />
             <span class="text-transparent [-webkit-text-stroke:1.5px_var(--fg)]"
                 >López</span
@@ -66,46 +62,41 @@ import Socials from "./Socials.astro";
 </section>
 
 <style>
+    /* Everything inside the stage is sized from --h, so it scales as one piece */
     .stage {
+        --h: clamp(340px, 112vw, 520px);
         position: relative;
         margin-inline: auto;
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 320px;
-        height: 420px;
+        width: min(100%, calc(var(--h) * 0.77));
+        height: var(--h);
         perspective: 900px;
     }
     @media (min-width: 768px) {
         .stage {
-            width: 400px;
-            height: 520px;
+            --h: 520px;
         }
     }
 
     .halo {
         position: absolute;
-        width: 288px;
-        height: 288px;
+        width: calc(var(--h) * 0.55);
+        height: calc(var(--h) * 0.55);
         border-radius: 9999px;
         background: color-mix(in srgb, var(--fg) 10%, transparent);
-        filter: blur(90px);
+        filter: blur(70px);
     }
 
     /* Dashed ring that spins slowly */
     .ring {
         position: absolute;
-        width: 300px;
-        height: 300px;
+        width: calc(var(--h) * 0.73);
+        height: calc(var(--h) * 0.73);
         border-radius: 9999px;
         border: 1px dashed var(--line);
         animation: orbit 25s linear infinite;
-    }
-    @media (min-width: 768px) {
-        .ring {
-            width: 380px;
-            height: 380px;
-        }
     }
 
     /* Mouse tilt (JS sets the transform here) */
@@ -126,7 +117,8 @@ import Socials from "./Socials.astro";
 
     .photo {
         display: block;
-        height: 400px;
+        height: calc(var(--h) * 0.92);
+        width: auto;
         object-fit: contain;
         -webkit-mask-image: linear-gradient(
             to bottom,
@@ -135,33 +127,37 @@ import Socials from "./Socials.astro";
         );
         mask-image: linear-gradient(to bottom, black 65%, transparent 80%);
     }
-    @media (min-width: 768px) {
-        .photo {
-            height: 480px;
-        }
-    }
 
     .badge {
         position: absolute;
         border: 1px solid var(--line);
         background: color-mix(in srgb, var(--fg) 5%, transparent);
         border-radius: 1rem;
-        padding: 0.5rem 1rem;
-        font-size: 0.75rem;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.7rem;
         backdrop-filter: blur(8px);
         white-space: nowrap;
     }
     .badge-top {
-        top: 4rem;
-        left: -0.5rem;
+        top: 12%;
+        left: -0.25rem;
     }
     .badge-bottom {
-        bottom: 5rem;
-        right: -0.5rem;
+        bottom: 12%;
+        right: -0.25rem;
     }
     @media (min-width: 768px) {
+        .badge {
+            padding: 0.5rem 1rem;
+            font-size: 0.75rem;
+        }
         .badge-top {
+            top: 4rem;
             left: -1rem;
+        }
+        .badge-bottom {
+            bottom: 5rem;
+            right: -0.5rem;
         }
     }
 
@@ -179,6 +175,14 @@ import Socials from "./Socials.astro";
             transform: rotate(360deg);
         }
     }
+
+    @media (prefers-reduced-motion: reduce) {
+        .ring,
+        .float,
+        .float-delay {
+            animation: none;
+        }
+    }
 </style>
 
 <script>
@@ -192,5 +196,8 @@ import Socials from "./Socials.astro";
         const y = (e.clientY - r.top) / r.height - 0.5;
         if (tilt)
             tilt.style.transform = `rotateY(${x * 12}deg) rotateX(${-y * 12}deg)`;
+    });
+    wrap?.addEventListener("mouseleave", () => {
+        if (tilt) tilt.style.transform = "";
     });
 </script>

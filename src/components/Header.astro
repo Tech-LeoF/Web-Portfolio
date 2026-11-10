@@ -12,11 +12,13 @@ const links = [
 
 <header class="absolute inset-x-0 top-0 z-30">
     <nav
-        class="mx-auto flex max-w-6xl items-center justify-between px-6 py-6 md:py-8"
+        class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5 md:py-8"
     >
-        <a href="/" class="text-2xl font-bold">LL<span class="text-muted">.</span></a>
+        <a href="/" class="text-2xl font-bold"
+            >LL<span class="text-muted">.</span></a
+        >
 
-        <div class="flex items-center gap-4 md:gap-6">
+        <div class="flex items-center gap-2 md:gap-6">
             <!-- Desktop menu -->
             <ul class="hidden gap-2 text-sm text-muted lg:flex">
                 {
@@ -25,7 +27,9 @@ const links = [
                             <a
                                 href={link.href}
                                 class="nav-link"
-                                aria-current={path === link.href ? "page" : undefined}
+                                aria-current={
+                                    path === link.href ? "page" : undefined
+                                }
                             >
                                 {link.label}
                             </a>
@@ -39,10 +43,21 @@ const links = [
                 id="theme-toggle"
                 data-magnetic
                 aria-label="Toggle theme"
-                class="grid h-8 w-8 place-items-center text-fg"
+                class="grid h-10 w-10 place-items-center text-fg"
             >
-                <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
-                    <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"></circle>
+                <svg
+                    width="22"
+                    height="22"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                >
+                    <circle
+                        cx="12"
+                        cy="12"
+                        r="9"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"></circle>
                     <path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"></path>
                 </svg>
             </button>
@@ -53,9 +68,18 @@ const links = [
                 aria-label="Open menu"
                 aria-expanded="false"
                 aria-controls="mobile-menu"
-                class="grid h-8 w-8 place-items-center text-fg lg:hidden"
+                class="grid h-10 w-10 place-items-center text-fg lg:hidden"
             >
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                <svg
+                    width="22"
+                    height="22"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    aria-hidden="true"
+                >
                     <path d="M4 7h16M4 12h16M4 17h16"></path>
                 </svg>
             </button>
@@ -74,7 +98,9 @@ const links = [
                         <a
                             href={link.href}
                             class="block rounded-xl px-4 py-3 text-muted transition hover:text-fg aria-[current=page]:text-fg"
-                            aria-current={path === link.href ? "page" : undefined}
+                            aria-current={
+                                path === link.href ? "page" : undefined
+                            }
                         >
                             {link.label}
                         </a>
@@ -132,8 +158,32 @@ const links = [
     const menuBtn = document.getElementById("menu-toggle");
     const menu = document.getElementById("mobile-menu");
 
+    function setMenu(open: boolean) {
+        menu?.classList.toggle("hidden", !open);
+        menuBtn?.setAttribute("aria-expanded", String(open));
+        menuBtn?.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    }
+
     menuBtn?.addEventListener("click", () => {
-        const open = menu?.classList.toggle("hidden") === false;
-        menuBtn.setAttribute("aria-expanded", String(open));
+        setMenu(menu?.classList.contains("hidden") ?? false);
+    });
+
+    // Close when a link is tapped
+    menu?.addEventListener("click", (e) => {
+        if ((e.target as HTMLElement).closest("a")) setMenu(false);
+    });
+
+    // Close when tapping outside, pressing Esc, or growing to desktop size
+    document.addEventListener("click", (e) => {
+        const t = e.target as Node;
+        if (menu && menuBtn && !menu.contains(t) && !menuBtn.contains(t)) {
+            setMenu(false);
+        }
+    });
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") setMenu(false);
+    });
+    matchMedia("(min-width: 1024px)").addEventListener("change", (e) => {
+        if (e.matches) setMenu(false);
     });
 </script>

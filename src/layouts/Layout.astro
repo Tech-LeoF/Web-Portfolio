@@ -1,6 +1,9 @@
 ---
 import "../styles/global.css";
-const { title = "My Portfolio" } = Astro.props;
+const {
+    title = "My Portfolio",
+    description = "Portfolio of Leonardo López, Fullstack Developer.",
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -8,6 +11,7 @@ const { title = "My Portfolio" } = Astro.props;
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="description" content={description} />
         <title>{title}</title>
 
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -110,8 +114,10 @@ const { title = "My Portfolio" } = Astro.props;
                     var cw = canvas.clientWidth || window.innerWidth;
                     var ch = canvas.clientHeight || window.innerHeight;
                     if (cw < 2 || ch < 2) return;
+                    // Nothing changed (e.g. the mobile address bar hiding): do nothing
+                    if (cw === W && ch === H) return;
 
-                    dpr = Math.min(window.devicePixelRatio || 1, 2);
+                    dpr = Math.min(window.devicePixelRatio || 1, cw < 768 ? 1.5 : 2);
                     W = cw;
                     H = ch;
                     canvas.width = Math.round(W * dpr);
@@ -387,7 +393,7 @@ const { title = "My Portfolio" } = Astro.props;
             })();
         </script>
 
-        <!-- Custom cursor -->
+        <!-- Custom cursor (mouse only) -->
         <script is:inline>
             (function () {
                 var RING_SIZE = 56;
@@ -395,7 +401,7 @@ const { title = "My Portfolio" } = Astro.props;
                 var dot = document.getElementById("cursor-dot");
                 if (!ring || !dot) return;
 
-                // Skip only on touch-only devices
+                // Skip on touch-only devices
                 if (window.matchMedia("(hover: none)").matches) return;
 
                 var mx = -100, my = -100;

@@ -11,7 +11,9 @@ interface Props {
 const { cert } = Astro.props;
 ---
 
-<article class="reveal flex flex-col overflow-hidden rounded-2xl border border-line bg-fg/5">
+<article
+    class="reveal flex flex-col overflow-hidden rounded-2xl border border-line bg-fg/5"
+>
     <a href={cert.href} target="_blank" rel="noopener noreferrer" class="block">
         {
             cert.image ? (
@@ -19,7 +21,7 @@ const { cert } = Astro.props;
                     src={cert.image}
                     alt={`${cert.title} certificate`}
                     loading="lazy"
-                    class="aspect-[4/3] w-full object-cover"
+                    class="aspect-[4/3] w-full bg-white object-cover object-top"
                 />
             ) : (
                 <div class="grid aspect-[4/3] w-full place-items-center border-b border-line text-xs tracking-[0.25em] text-muted">

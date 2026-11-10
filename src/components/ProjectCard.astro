@@ -165,4 +165,26 @@ const tall = index % 2 === 1;
         background: rgba(255, 255, 255, 0.18);
         backdrop-filter: blur(4px);
     }
+    /* Phones and touch screens: the overlay is always visible, so keep it short */
+    @media (max-width: 767px), (hover: none) {
+        .overlay {
+            padding: 1rem;
+        }
+        .desc {
+            display: none;
+        }
+        h3 {
+            font-size: 1.35rem;
+        }
+        .eyebrow {
+            margin-bottom: 0.35rem;
+        }
+        ul {
+            gap: 0.35rem;
+        }
+        li {
+            padding: 0.2rem 0.65rem;
+            font-size: 0.7rem;
+        }
+    }
 </style>
