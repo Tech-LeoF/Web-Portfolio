@@ -8,15 +8,34 @@ import CertCard from "../components/CertCard.astro";
 /* EDIT: the 3 required courses of the module.
    image: put the diploma in public/certs/ and use "/certs/file.jpg" */
 const courses = [
-    { title: "Course 1 Name", issuer: "Platzi", date: "2024", href: "https://platzi.com/p/your-user/course/your-course/diploma/detalle/", image: "" },
-    { title: "Course 2 Name", issuer: "Platzi", date: "2025", href: "https://platzi.com/p/your-user/course/your-course/diploma/detalle/", image: "" },
-    { title: "Course 3 Name", issuer: "Platzi", date: "2026", href: "https://platzi.com/p/your-user/course/your-course/diploma/detalle/", image: "" },
+    { title: "Intermediate Investing: Risk Analysis and Decision-Making", issuer: "Platzi", date: "2026", href: "https://platzi.com/p/frankkalyboris/curso/2723-course/diploma/detalle/", image: "/certs/diploma-analisis-tecnico.jpg" },
+    { title: "Introduction to Technical Analysis of Financial Markets", issuer: "Platzi", date: "2026", href: "https://platzi.com/p/frankkalyboris/curso/2722-course/diploma/detalle/", image: "/certs/diploma-analisis-tecnico-intro.jpg" },
+    { title: "Investing in the Stock Market from Scratch", issuer: "Platzi", date: "2026", href: "https://platzi.com/p/frankkalyboris/curso/5614-course/diploma/detalle/", image: "/certs/diploma-inversion-bolsa-trii.jpg" },
 ];
 
 // EDIT: extra certificates earned during the 3 years
 const extra = [
-    { title: "Responsive Web Design", issuer: "freeCodeCamp", date: "2025", href: "https://www.freecodecamp.org/certification/your-user/responsive-web-design", image: "" },
-    { title: "Git & GitHub Essentials", issuer: "Coursera", date: "2026", href: "https://www.coursera.org/account/accomplishments/verify/your-code", image: "" },
+    {
+        title: "CSP 2026 Certification", // EDIT: official name
+        issuer: "ESEN", // EDIT
+        date: "2026",
+        href: "/certs/csp-2026.jpg",
+        image: "/certs/csp-2026.jpg",
+    },
+    {
+        title: "Excel Expert Certification",
+        issuer: "Microsoft", // EDIT
+        date: "2026", // EDIT
+        href: "/certs/excel-expert.jpg",
+        image: "/certs/excel-expert.jpg",
+    },
+    {
+        title: "Power BI",
+        issuer: "Programa Empresarial ¡SUPÉRATE!", // EDIT
+        date: "2026", // EDIT
+        href: "/certs/power-bi.png",
+        image: "/certs/power-bi.png",
+    },
 ];
 ---
 

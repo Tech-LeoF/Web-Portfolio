@@ -70,7 +70,10 @@ const about = project.about?.length ? project.about : [project.description];
         </div>
 
         <!-- Scrollable content -->
-        <div data-scroll class="scroll flex-1 overflow-y-auto px-6 py-8 md:px-8">
+        <div
+            data-scroll
+            class="scroll flex-1 overflow-y-auto px-6 py-8 md:px-8"
+        >
             <p class="text-xs tracking-[0.25em] text-muted">{eyebrow}</p>
             <h2 id={`${project.slug}-title`} class="mt-3 text-3xl font-bold">
                 {project.title}
@@ -135,8 +138,9 @@ const about = project.about?.length ? project.about : [project.description];
                                 <span
                                     aria-hidden="true"
                                     class="transition group-hover:translate-x-0.5"
-                                    >↗</span
                                 >
+                                    ↗
+                                </span>
                             </a>
                         </li>
                     ))

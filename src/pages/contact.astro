@@ -3,68 +3,110 @@ import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import NextLink from "../components/NextLink.astro";
-import Socials from "../components/Socials.astro";
 
-// EDIT: your email and your Formspree URL (free at formspree.io)
-const email = "your@email.com";
-const formEndpoint = "https://formspree.io/f/your-form-id";
+// EDIT: your real data (keep them the same as in Socials.astro)
+const email = "leonardlzfranco@gmail.com";
+const github = "https://github.com/Tech-LeoF";
+const linkedin = "https://www.linkedin.com/in/leonardo-l%C3%B3pez-7380203b7/";
 
-const field =
-    "mt-2 w-full rounded-xl border border-line bg-fg/5 px-4 py-3 text-sm text-fg outline-none transition focus:border-fg";
+const mailto = `mailto:${email}?subject=${encodeURIComponent("Hello from your portfolio")}`;
+
+const cards = [
+    {
+        label: "Email",
+        value: email,
+        href: mailto,
+        external: false,
+        icon: "mail",
+    },
+    {
+        label: "LinkedIn",
+        value: "Connect with me",
+        href: linkedin,
+        external: true,
+        icon: "linkedin",
+    },
+    {
+        label: "GitHub",
+        value: "See my code",
+        href: github,
+        external: true,
+        icon: "github",
+    },
+];
 ---
 
 <Layout title="Contact | Leonardo López">
     <Header />
     <main class="mx-auto max-w-6xl px-6 pb-24 pt-32 md:pt-40">
         <h1 class="reveal text-5xl font-bold md:text-6xl">Contact.</h1>
+        <p class="reveal mt-8 max-w-xl leading-8 text-muted">
+            Have an idea, an opportunity or just want to say hi? Pick the
+            channel you like best and I'll get back to you as soon as I can.
+        </p>
 
-        <div class="mt-14 grid gap-16 md:grid-cols-2">
-            <div class="reveal">
-                <p class="max-w-md leading-8 text-muted">
-                    Have an idea, an opportunity or just want to say hi? Send me
-                    a message and I'll get back to you as soon as I can.
-                </p>
+        <div class="mt-14 grid gap-4 md:grid-cols-3">
+            {
+                cards.map((c) => (
+                    <a
+                        href={c.href}
+                        target={c.external ? "_blank" : undefined}
+                        rel={c.external ? "noopener noreferrer" : undefined}
+                        class="reveal group flex flex-col justify-between gap-10 rounded-2xl border border-line bg-fg/5 p-6 transition duration-300 hover:-translate-y-1 hover:border-fg"
+                    >
+                        <div class="flex items-center justify-between">
+                            <span class="grid h-11 w-11 place-items-center rounded-full border border-line">
+                                {c.icon === "mail" && (
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <rect x="3" y="5" width="18" height="14" rx="2" />
+                                        <path d="m3 7 9 6 9-6" />
+                                    </svg>
+                                )}
+                                {c.icon === "linkedin" && (
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                        <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12ZM7.12 20.45H3.56V9h3.56v11.45Z" />
+                                    </svg>
+                                )}
+                                {c.icon === "github" && (
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                        <path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.54-3.88-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.03 1.76 2.69 1.25 3.35.96.1-.74.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.62 1.59.23 2.76.11 3.05.74.81 1.18 1.84 1.18 3.1 0 4.42-2.7 5.4-5.27 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5Z" />
+                                    </svg>
+                                )}
+                            </span>
+                            <span aria-hidden="true" class="transition duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
+                                ↗
+                            </span>
+                        </div>
+                        <div>
+                            <p class="text-xs tracking-[0.25em] text-muted">
+                                {c.label.toUpperCase()}
+                            </p>
+                            <p class="mt-2 break-all text-lg font-semibold">
+                                {c.value}
+                            </p>
+                        </div>
+                    </a>
+                ))
+            }
+        </div>
 
-                <a
-                    href={`mailto:${email}`}
-                    class="mt-8 inline-block break-all border-b border-fg pb-1 text-xl font-semibold md:text-2xl"
-                >
-                    {email}
-                </a>
-
-                <div class="mt-10">
-                    <Socials />
-                </div>
-            </div>
-
-            <form id="contact-form" action={formEndpoint} method="POST" class="reveal space-y-6">
-                <label class="block text-sm text-muted">
-                    Name
-                    <input type="text" name="name" required autocomplete="name" class={field} />
-                </label>
-
-                <label class="block text-sm text-muted">
-                    Email
-                    <input type="email" name="email" required autocomplete="email" class={field} />
-                </label>
-
-                <label class="block text-sm text-muted">
-                    Message
-                    <textarea name="message" rows="5" required class={field}></textarea>
-                </label>
-
-                <!-- Honeypot: hidden field that blocks spam bots -->
-                <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hidden" />
-
-                <button
-                    type="submit"
-                    class="rounded-full bg-fg px-8 py-3 text-sm font-semibold text-bg transition hover:-translate-y-1"
-                >
-                    Send message
-                </button>
-
-                <p id="form-status" role="status" class="text-sm text-muted"></p>
-            </form>
+        <div class="reveal mt-8 flex flex-wrap items-center gap-4">
+            <button
+                id="copy-email"
+                type="button"
+                data-email={email}
+                class="rounded-full border border-line px-6 py-3 text-sm transition hover:border-fg"
+            >
+                Copy email address
+            </button>
+            <a
+                href="/CVA.pdf"
+                download="CVA.pdf"
+                class="rounded-full bg-fg px-6 py-3 text-sm font-semibold text-bg transition hover:-translate-y-0.5"
+            >
+                Download CV
+            </a>
+            <p id="copy-status" role="status" class="text-sm text-muted"></p>
         </div>
 
         <NextLink />
@@ -72,30 +114,22 @@ const field =
     <Footer />
 </Layout>
 
-<script>
-    const form = document.getElementById("contact-form") as HTMLFormElement | null;
-    const status = document.getElementById("form-status");
+<script is:inline>
+    (function () {
+        var btn = document.getElementById("copy-email");
+        var status = document.getElementById("copy-status");
+        if (!btn) return;
 
-    form?.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        if (!status) return;
-        status.textContent = "Sending…";
-
-        try {
-            const res = await fetch(form.action, {
-                method: "POST",
-                body: new FormData(form),
-                headers: { Accept: "application/json" },
-            });
-
-            if (res.ok) {
-                form.reset();
-                status.textContent = "Thank you! Your message has been sent.";
+        btn.addEventListener("click", function () {
+            var email = btn.getAttribute("data-email");
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(email).then(
+                    function () { status.textContent = "Copied to your clipboard!"; },
+                    function () { status.textContent = email; }
+                );
             } else {
-                status.textContent = "Something went wrong. Please email me directly.";
+                status.textContent = email;
             }
-        } catch {
-            status.textContent = "Network error. Please email me directly.";
-        }
-    });
+        });
+    })();
 </script>
